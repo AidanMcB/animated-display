@@ -2,6 +2,20 @@ import pygame
 import math
 import pyaudio
 import numpy as np
+import argparse
+
+###### About ########
+#####################
+#####################
+#
+#
+# By default, this runs using audio input 1.
+# To specify a different audio device, add as an argument:
+#       `python your_script.py --input_device_index 2`
+#
+#####################
+#####################
+#####################
 
 # Initialize Pygame
 pygame.init()
@@ -32,16 +46,15 @@ def draw_wave(screen, amplitude, frequency, offset):
     pygame.draw.lines(screen, line_color, False, points, 2)
 
 # Function to get the average volume from the microphone
-def get_volume():
+def get_volume(input_device_index):
     CHUNK = 1024  # Number of audio samples per frame
     RATE = 44100  # Sampling rate in Hz
 
     # Open the stream
     p = pyaudio.PyAudio()
     try:
-        # Specify index of sound input if needed
-        stream = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK, input_device_index=1) 
-        # stream = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK)
+        # Specify index of sound input
+        stream = p.open(format=pyaudio.paInt16, channels=1, rate=RATE, input=True, frames_per_buffer=CHUNK, input_device_index=input_device_index)
 
         # Read data from the stream
         data = stream.read(CHUNK)
@@ -62,6 +75,11 @@ def get_volume():
 
     return volume
 
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description="Visualize sound wave from microphone.")
+parser.add_argument('--input_device_index', type=int, default=1, help="Index of the audio input device (default is 1).")
+args = parser.parse_args()
+
 # Main loop variables
 max_amplitude = 100  # Maximum amplitude of the wave
 frequency = 0.05  # Frequency of the wave
@@ -81,7 +99,7 @@ while running:
             running = False
 
     # Get the current volume level
-    volume = get_volume()
+    volume = get_volume(args.input_device_index)
 
     # Normalize volume to amplitude (adjust this as needed)
     sensitivity = 50  # Adjust this value as needed
@@ -103,7 +121,6 @@ while running:
 
     # Cap the frame rate
     pygame.time.Clock().tick(60)
-
 
 # Quit Pygame
 pygame.quit()

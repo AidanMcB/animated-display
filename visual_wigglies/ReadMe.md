@@ -14,3 +14,9 @@
 - `pip install -r requirements.txt`
 5. Run application
 - `python main.py`
+
+
+### Notes
+- If running on a Raspberry Pi, may require additional steps
+1. Install `portaudio` to before installing the requirements.text file (specifically for pyaudio)
+`sudo apt install portaudio19-dev`
