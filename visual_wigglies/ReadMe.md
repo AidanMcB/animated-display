@@ -11,6 +11,6 @@
 - For windows:
 `env\Scripts\activate`
 4. Install requirements
-- `pip3 install -r requirements.txt`
+- `pip install -r requirements.txt`
 5. Run application
-- `python3 main.py`
+- `python main.py`
